@@ -1,0 +1,52 @@
+
+<div style="max-width: 850px; margin: 50px auto; font-family: sans-serif; padding: 0 15px;">
+
+  <h1 style="text-align: center;">🏆 漢越音ランキング</h1>
+
+  <p style="text-align: center;">
+    全プレイヤー共通レートランキング
+  </p>
+
+  <table style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+    <thead>
+      <tr style="background: #2563eb; color: white;">
+        <th style="padding: 15px;">順位</th>
+        <th>ユーザー名</th>
+        <th>レート</th>
+        <th>正答率</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @players.each_with_index do |player, index| %>
+        <tr style="text-align: center; border-bottom: 1px solid #ddd; background: <%= player.id == current_player.id ? '#dbeafe' : 'white' %>;">
+          <td style="padding: 15px;">
+            <%= index + 1 %>位
+          </td>
+
+          <td>
+            <%= player.name %>
+            <% if player.id == current_player.id %>
+              （あなた）
+            <% end %>
+          </td>
+
+          <td style="font-weight: bold;">
+            <%= player.rating %>
+          </td>
+
+          <td>
+            <%= player.accuracy %>%
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div style="text-align: center; margin-top: 30px;">
+    <%= link_to "クイズに戻る", quiz_path %>
+    |
+    <%= link_to "マイページ", mypage_path %>
+  </div>
+
+</div>

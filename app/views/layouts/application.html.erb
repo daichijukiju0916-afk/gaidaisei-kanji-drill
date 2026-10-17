@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Kanji Vietnamese" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body style="margin: 0; font-family: sans-serif;">
+
+    <%= render "layouts/navigation" if player_signed_in? %>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <footer style="
+      margin-top: 60px;
+      padding: 25px 20px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.9;
+    ">
+      <div style="max-width: 900px; margin: 0 auto;">
+
+        <h3 style="font-size: 15px; margin: 0 0 10px;">
+          免責事項
+        </h3>
+
+        <p>
+          本サイトは漢字の漢越音を学習するためのサービスです。
+          掲載する漢字、漢越音、その他の情報について、
+          正確性、完全性、有用性を保証するものではありません。
+        </p>
+
+        <p>
+          本サイトの利用に関連して、試験・検定での誤答や不合格、
+          学習上の不利益、データの損失、その他の損害が発生した場合でも、
+          運営者は法令上認められる範囲において責任を負いません。
+        </p>
+
+        <p>
+          学習や試験対策の際は、公式教材や信頼できる辞典なども
+          併用してください。
+        </p>
+
+        <p style="margin-top: 15px; color: #94a3b8;">
+          © <%= Date.current.year %> Kanji Vietnamese
+        </p>
+
+      </div>
+    </footer>
+
+  </body>
+</html>

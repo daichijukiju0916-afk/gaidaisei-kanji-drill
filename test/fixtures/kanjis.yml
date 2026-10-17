@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  character: MyString
+  grade: 1
+  level: MyString
+  vietnamese: MyString
+  difficulty: 1
+
+two:
+  character: MyString
+  grade: 1
+  level: MyString
+  vietnamese: MyString
+  difficulty: 1

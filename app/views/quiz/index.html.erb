@@ -1,0 +1,69 @@
+<div style="text-align: center; margin-top: 80px;">
+  <h1>漢越音チャレンジ</h1>
+<div style="margin: 20px 0;">
+  <%= link_to "マイページを見る", mypage_path,
+      style: "display: inline-block; padding: 10px 20px; background: #f1f5f9; color: #2563eb; border-radius: 8px; text-decoration: none; font-weight: bold;" %>
+</div>
+  <h2>現在のレート：<%= @player.rating %></h2>
+
+  <% if params[:result].present? %>
+    <% answered_kanji = Kanji.find_by(id: params[:kanji_id]) %>
+
+    <% if params[:result] == "correct" %>
+      <h2 style="color: green;">正解！</h2>
+    <% else %>
+      <h2 style="color: red;">不正解！</h2>
+    <% end %>
+
+    <% if answered_kanji %>
+      <h2 style="font-size: 80px;">
+        <%= answered_kanji.character %>
+      </h2>
+
+      <p>
+        正しい漢越音：
+        <strong><%= answered_kanji.vietnamese %></strong>
+      </p>
+    <% end %>
+
+    <h2>
+      レート変動：
+      <span style="color: <%= params[:change].to_i >= 0 ? 'green' : 'red' %>;">
+        <%= params[:change].to_i >= 0 ? '+' : '' %><%= params[:change] %>
+      </span>
+    </h2>
+
+    <%= link_to "次の問題へ", quiz_path,
+        style: "display: inline-block; margin-top: 20px; padding: 12px 30px; background: #2563eb; color: white; text-decoration: none; border-radius: 8px;" %>
+
+  <% elsif @kanji %>
+    <p>次の漢字の漢越音を答えてください</p>
+
+    <h2 style="font-size: 100px;">
+      <%= @kanji.character %>
+    </h2>
+
+    <%= form_with url: "/quiz/answer",
+                  method: :post,
+                  local: true,
+                  data: { turbo: false } do |f| %>
+
+      <%= hidden_field_tag :kanji_id, @kanji.id %>
+
+      <%= f.text_field :answer,
+          placeholder: "ベトナム語を入力",
+          required: true,
+          autocomplete: "off",
+          autofocus: true,
+          style: "padding: 12px; font-size: 20px;" %>
+
+      <br><br>
+
+      <%= f.submit "回答する",
+          style: "padding: 12px 30px; font-size: 18px;" %>
+    <% end %>
+
+  <% else %>
+    <p>漢字が登録されていません。</p>
+  <% end %>
+</div>

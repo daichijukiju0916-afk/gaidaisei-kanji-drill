@@ -1,0 +1,18 @@
+<div style="text-align: center; margin-top: 80px;">
+  <h1>漢越音チャレンジ</h1>
+
+  <h2 style="font-size: 100px;">
+    <%= @kanji.character %>
+  </h2>
+
+  <% if @correct %>
+    <h2 style="color: green;">正解！</h2>
+  <% else %>
+    <h2 style="color: red;">不正解！</h2>
+  <% end %>
+
+  <p>あなたの回答：<%= @user_answer %></p>
+  <p>正しい漢越音：<%= @kanji.vietnamese %></p>
+
+  <%= link_to "次の問題へ", "/quiz" %>
+</div>

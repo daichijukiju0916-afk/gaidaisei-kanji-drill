@@ -8,8 +8,7 @@ fi
 
 # Prepare database when starting Rails server.
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-  ./bin/rails db:prepare
-
+./bin/rails db:migrate
   # Import kanji data without importing local users or answers.
   ./bin/rails runner db/import_kanjis.rb
 fi

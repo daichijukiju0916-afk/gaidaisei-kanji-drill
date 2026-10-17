@@ -42,10 +42,10 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Adjust binfiles to be executable on Linux
-RUN chmod +x bin/* && \
-    sed -i "s/\r$//g" bin/* && \
-    sed -i 's/ruby\.exe$/ruby/' bin/*
-
+RUN sed -i 's/\r$//' bin/* && \
+    sed -i 's/\r$//' bin/docker-entrypoint && \
+    sed -i 's/ruby\.exe$/ruby/' bin/* && \
+    chmod +x bin/*
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 

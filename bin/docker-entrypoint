@@ -1,16 +1,20 @@
-
 #!/bin/bash -e
 
-# Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ] && [ -f /usr/lib/*/libjemalloc.so.2 ]; then
   export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2)"
 fi
 
-# Prepare database when starting Rails server.
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-./bin/rails db:migrate
-  # Import kanji data without importing local users or answers.
-  ./bin/rails runner db/import_kanjis.rb
+  echo "START: database migration"
+
+  ./bin/rails db:migrate
+
+  echo "SUCCESS: database migration"
+
+  # 漢字5875字は登録済みのため再インポートしない
+  # ./bin/rails runner db/import_kanjis.rb
 fi
+
+echo "START: Rails server"
 
 exec "${@}"

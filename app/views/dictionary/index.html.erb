@@ -1,0 +1,147 @@
+
+<div style="max-width: 750px; margin: 45px auto; padding: 20px; font-family: sans-serif;">
+
+  <h1 style="text-align: center;">🔎 漢字音検索辞典</h1>
+
+  <p style="text-align: center; color: #64748b;">
+    漢字・漢越音・ハングルから検索できます
+  </p>
+
+  <input
+    id="dictionary-query"
+    type="search"
+    placeholder="例：学、học、학"
+    autocomplete="off"
+    autofocus
+    style="box-sizing: border-box; width: 100%; padding: 16px; font-size: 24px; border: 2px solid #2563eb; border-radius: 12px; margin-top: 25px;"
+  >
+
+  <p id="dictionary-status"
+     aria-live="polite"
+     style="color: #64748b; margin: 20px 0;">
+    文字を入力すると検索結果が表示されます
+  </p>
+
+  <div id="dictionary-results"></div>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <%= link_to "🇻🇳 ベトナム語クイズ", quiz_path %>
+    |
+    <%= link_to "🇰🇷🇰🇵 コリア語クイズ", korean_quiz_path %>
+    |
+    <%= link_to "マイページ", mypage_path %>
+  </div>
+
+</div>
+
+<script>
+(() => {
+  const input = document.getElementById("dictionary-query");
+  const results = document.getElementById("dictionary-results");
+  const status = document.getElementById("dictionary-status");
+
+  if (!input || input.dataset.initialized) return;
+  input.dataset.initialized = "true";
+
+  let timer;
+  let controller;
+
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+
+    if (controller) controller.abort();
+
+    const query = input.value.trim();
+    results.replaceChildren();
+
+    if (!query) {
+      status.textContent = "文字を入力すると検索結果が表示されます";
+      return;
+    }
+
+    status.textContent = "検索中...";
+
+    timer = setTimeout(async () => {
+      controller = new AbortController();
+
+      try {
+        const response = await fetch(
+          "/dictionary.json?q=" + encodeURIComponent(query),
+          {
+            signal: controller.signal,
+            headers: { "Accept": "application/json" }
+          }
+        );
+
+        if (!response.ok) throw new Error("検索失敗");
+
+        const kanjis = await response.json();
+
+        if (input.value.trim() !== query) return;
+
+        status.textContent =
+          kanjis.length === 0
+            ? "一致する漢字がありません"
+            : kanjis.length + "件表示（最大50件）";
+
+        const fragment = document.createDocumentFragment();
+
+        kanjis.forEach(kanji => {
+          const card = document.createElement("div");
+
+          card.style.cssText = `
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+          `;
+
+          const character = document.createElement("div");
+          character.textContent = kanji.character;
+          character.style.cssText = `
+            font-size: 52px;
+            font-weight: bold;
+            min-width: 75px;
+            text-align: center;
+            color: #0f172a;
+          `;
+
+          const readings = document.createElement("div");
+          readings.style.cssText = `
+            font-size: 20px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+            min-width: 0;
+          `;
+
+          const vietnamese = document.createElement("div");
+          vietnamese.textContent =
+            "🇻🇳 " + (kanji.vietnamese || "未登録");
+
+          const korean = document.createElement("div");
+          korean.textContent =
+            "🇰🇷🇰🇵 " + (kanji.korean || "未登録");
+
+          readings.appendChild(vietnamese);
+          readings.appendChild(korean);
+
+          card.appendChild(character);
+          card.appendChild(readings);
+
+          fragment.appendChild(card);
+        });
+
+        results.replaceChildren(fragment);
+
+      } catch (error) {
+        if (error.name === "AbortError") return;
+        status.textContent = "検索中にエラーが発生しました";
+      }
+    }, 200);
+  });
+})();
+</script>

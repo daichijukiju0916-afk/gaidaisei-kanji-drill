@@ -23,5 +23,6 @@ get "rankings", to: "rankings#index"
   # 韓国語クイズ
   get "/korean_quiz", to: "korean_quiz#index", as: :korean_quiz
   post "/korean_quiz/answer", to: "korean_quiz#answer", as: :korean_quiz_answer
-
+# 漢字・漢越音・コリア語の検索辞典
+get "/dictionary", to: "dictionary#index", as: :dictionary
 end

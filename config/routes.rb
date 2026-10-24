@@ -19,4 +19,9 @@ Rails.application.routes.draw do
 post "quiz/answer", to: "quiz#answer"
 get "mypage", to: "players#show"
 get "rankings", to: "rankings#index"
+
+  # 韓国語クイズ
+  get "/korean_quiz", to: "korean_quiz#index", as: :korean_quiz
+  post "/korean_quiz/answer", to: "korean_quiz#answer", as: :korean_quiz_answer
+
 end

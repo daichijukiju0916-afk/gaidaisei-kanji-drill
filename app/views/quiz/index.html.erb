@@ -20,10 +20,10 @@
         <%= answered_kanji.character %>
       </h2>
 
-      <p>
-        正しい漢越音：
-        <strong><%= answered_kanji.vietnamese %></strong>
-      </p>
+      <p>正しい漢越音：</p>
+<div style="font-size: 100px !important; font-weight: bold; color: red !important;">
+  <%= answered_kanji.vietnamese %>
+</div>
     <% end %>
 
     <h2>
@@ -55,7 +55,8 @@
           required: true,
           autocomplete: "off",
           autofocus: true,
-          style: "padding: 12px; font-size: 20px;" %>
+          style: "padding: 12px; font-size: 100px;" %>
+          
 
       <br><br>
 
@@ -66,4 +67,9 @@
   <% else %>
     <p>漢字が登録されていません。</p>
   <% end %>
+</div>
+
+<div style="margin: 20px 0;">
+  <%= link_to "🇰🇷🇰🇵 コリア語クイズへ", korean_quiz_path,
+      style: "display: inline-block; padding: 12px 25px; background: #16a34a; color: white; border-radius: 8px; text-decoration: none; font-weight: bold;" %>
 </div>

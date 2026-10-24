@@ -1,0 +1,66 @@
+
+<div style="max-width: 600px; margin: 50px auto; text-align: center; padding: 20px;">
+
+  <h1>コリア語・漢字音チャレンジ</h1>
+
+  <p>
+    コリア語レート：
+    <strong><%= @player.korean_rating %></strong>
+  </p>
+
+  <% if params[:result].present? %>
+    <% if params[:result] == "correct" %>
+      <h2 style="color: green;">正解！</h2>
+    <% else %>
+      <h2 style="color: red;">不正解！</h2>
+    <% end %>
+
+    <% result_kanji = Kanji.find_by(id: params[:kanji_id]) %>
+
+    <% if result_kanji %>
+      <p>正しいハングルの読み：</p>
+      <h2 style="font-size: 48px;">
+        <%= result_kanji.korean %>
+      </h2>
+    <% end %>
+
+    <p>レート変動：<%= params[:change] %></p>
+    <hr>
+  <% end %>
+
+  <% if @kanji %>
+    <p>次の漢字のコリア語の音読みを答えてください。</p>
+
+    <h2 style="font-size: 100px; margin: 30px 0;">
+      <%= @kanji.character %>
+    </h2>
+
+    <%= form_with url: korean_quiz_answer_path,
+                  method: :post,
+                  local: true do %>
+
+      <%= hidden_field_tag :kanji_id, @kanji.id %>
+
+      <%= text_field_tag :answer, nil,
+            placeholder: "ハングルで回答",
+            autocomplete: "off",
+            required: true,
+            autofocus: true,
+            style: "font-size: 24px; padding: 12px; width: 80%; text-align: center;" %>
+
+      <div style="margin-top: 25px;">
+        <%= submit_tag "回答する",
+              style: "font-size: 22px; padding: 12px 35px; cursor: pointer;" %>
+      </div>
+
+    <% end %>
+
+  <% else %>
+    <p>現在、出題できるコリア語の漢字がありません。</p>
+  <% end %>
+
+  <div style="margin-top: 40px;">
+    <%= link_to "ベトナム語クイズへ", quiz_path %>
+  </div>
+
+</div>

@@ -1,67 +1,74 @@
-<div style="max-width: 700px; margin: 60px auto; text-align: center; font-family: sans-serif;">
+
+<div style="max-width: 900px; margin: 50px auto; padding: 20px; font-family: sans-serif; text-align: center;">
 
   <h1>外大生の漢字ドリル</h1>
   <h2>マイページ</h2>
 
-  <h3><%= @player.name %></h3>
+  <h2 style="color: #2563eb;">
+    <%= @player.name %>
+  </h2>
 
-  <div style="background: #eef2ff; padding: 30px; border-radius: 15px; margin: 20px 0;">
-    <p>現在のレート</p>
-    <h1 style="font-size: 55px; color: #2563eb;">
-      <%= @player.rating %>
-    </h1>
+  <p>ベトナム語・コリア語の学習成績</p>
 
-    <p>最高レート：<%= @player.best_rating %></p>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px;">
+
+    <% [
+      ["vietnamese", "🇻🇳 ベトナム語", quiz_path],
+      ["korean", "🇰🇷🇰🇵 コリア語", korean_quiz_path]
+    ].each do |language, title, quiz_url| %>
+
+      <% stats = @stats[language] %>
+
+      <div style="padding: 25px; border: 1px solid #ddd; border-radius: 15px; background: #f8fafc;">
+
+        <h2><%= title %></h2>
+
+        <p>現在のレート</p>
+        <h1 style="font-size: 55px; color: #2563eb; margin: 10px 0;">
+          <%= stats[:rating] %>
+        </h1>
+
+        <p>最高レート：<%= stats[:best_rating] %></p>
+
+        <hr style="margin: 20px 0;">
+
+        <h3 style="color: #15803d;">
+          ランキング：<%= stats[:rank] %>位
+        </h3>
+
+        <p>全<%= @total_players %>人中</p>
+
+        <p>回答数：<%= stats[:total] %>問</p>
+        <p>正解数：<%= stats[:correct] %>問</p>
+        <p>正答率：<%= stats[:accuracy] %>%</p>
+        <p>連続正解数：<%= stats[:streak] %>問</p>
+
+        <%= link_to "クイズをプレイ",
+            quiz_url,
+            style: "display: inline-block; padding: 12px 20px; margin-top: 15px; background: #2563eb; color: white; border-radius: 8px; text-decoration: none;" %>
+
+        <div style="margin-top: 15px;">
+          <%= link_to "ランキングを見る",
+              rankings_path(language: language) %>
+        </div>
+
+      </div>
+    <% end %>
+
   </div>
 
-  <div style="background: #f0fdf4; padding: 25px; border-radius: 15px; margin: 20px 0; border: 1px solid #bbf7d0;">
-    <p style="font-size: 18px; color: #166534;">
-      全ユーザーランキング
-    </p>
-
-    <h1 style="font-size: 45px; color: #15803d; margin: 10px 0;">
-      <%= @rank %>位
-    </h1>
-
-    <p style="color: #166534;">
-      全<%= @total_players %>人中
-    </p>
+  <div style="margin-top: 35px;">
+    <%= link_to "全体ランキング",
+        rankings_path,
+        style: "color: #2563eb; font-weight: bold;" %>
   </div>
 
-
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-
-    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-      <p>回答数</p>
-      <h2><%= @player.total_answers %>問</h2>
-    </div>
-
-    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-      <p>正解数</p>
-      <h2><%= @player.correct_answers %>問</h2>
-    </div>
-
-    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-      <p>正答率</p>
-      <h2><%= @player.accuracy %>%</h2>
-    </div>
-
-    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-      <p>連続正解数</p>
-      <h2><%= @player.winning_streak %>問</h2>
-    </div>
-
+  <div style="margin-top: 30px;">
+    <%= button_to "ログアウト",
+        destroy_player_session_path,
+        method: :delete,
+        form: { data: { turbo: false } },
+        style: "padding: 12px 30px; background: #dc2626; color: white; border: none; border-radius: 8px; cursor: pointer;" %>
   </div>
 
-  <br><br>
-
-  <%= link_to "クイズに戻る", quiz_path,
-      style: "display: inline-block; padding: 15px 30px; background: #2563eb; color: white; border-radius: 10px; text-decoration: none;" %>
-<div style="margin-top: 25px;">
-  <%= button_to "ログアウト",
-      destroy_player_session_path,
-      method: :delete,
-      form: { data: { turbo: false } },
-      style: "padding: 12px 30px; background: #dc2626; color: white; border: none; border-radius: 8px; cursor: pointer;" %>
-</div>
 </div>

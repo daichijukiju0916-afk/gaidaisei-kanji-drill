@@ -1,50 +1,76 @@
 
-<div style="max-width: 850px; margin: 50px auto; font-family: sans-serif; padding: 0 15px;">
+<div style="max-width: 850px; margin: 50px auto; padding: 0 15px; font-family: sans-serif;">
 
-  <h1 style="text-align: center;">🏆 漢越音ランキング</h1>
+  <h1 style="text-align: center;">
+    🏆 <%= @language == "korean" ? "コリア語" : "ベトナム語" %>ランキング
+  </h1>
 
-  <p style="text-align: center;">
-    全プレイヤー共通レートランキング
+  <p style="text-align: center; color: #64748b;">
+    言語別Eloレートランキング
   </p>
 
-  <table style="width: 100%; border-collapse: collapse; margin-top: 30px;">
-    <thead>
-      <tr style="background: #2563eb; color: white;">
-        <th style="padding: 15px;">順位</th>
-        <th>ユーザー名</th>
-        <th>レート</th>
-        <th>正答率</th>
-      </tr>
-    </thead>
+  <!-- 言語切り替え -->
+  <div style="display: flex; justify-content: center; gap: 12px; margin: 30px 0; flex-wrap: wrap;">
 
-    <tbody>
-      <% @players.each_with_index do |player, index| %>
-        <tr style="text-align: center; border-bottom: 1px solid #ddd; background: <%= player.id == current_player.id ? '#dbeafe' : 'white' %>;">
-          <td style="padding: 15px;">
-            <%= index + 1 %>位
-          </td>
+    <%= link_to "🇻🇳 ベトナム語",
+        rankings_path(language: "vietnamese"),
+        style: "padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; background: #{@language == 'vietnamese' ? '#2563eb' : '#e2e8f0'}; color: #{@language == 'vietnamese' ? 'white' : '#334155'};" %>
 
-          <td>
-            <%= player.name %>
-            <% if player.id == current_player.id %>
-              （あなた）
-            <% end %>
-          </td>
+    <%= link_to "🇰🇷🇰🇵 コリア語",
+        rankings_path(language: "korean"),
+        style: "padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; background: #{@language == 'korean' ? '#2563eb' : '#e2e8f0'}; color: #{@language == 'korean' ? 'white' : '#334155'};" %>
 
-          <td style="font-weight: bold;">
-            <%= player.rating %>
-          </td>
+  </div>
 
-          <td>
-            <%= player.accuracy %>%
-          </td>
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+      <thead>
+        <tr style="background: #2563eb; color: white;">
+          <th style="padding: 15px;">順位</th>
+          <th>ユーザー名</th>
+          <th>レート</th>
+          <th>正答率</th>
+          <th>回答数</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
 
-  <div style="text-align: center; margin-top: 30px;">
-    <%= link_to "クイズに戻る", quiz_path %>
+      <tbody>
+        <% @players.each_with_index do |player, index| %>
+          <% total = @total_counts.fetch(player.id, 0) %>
+          <% correct = @correct_counts.fetch(player.id, 0) %>
+          <% accuracy = total.zero? ? 0 : (correct.to_f / total * 100).round(1) %>
+
+          <tr style="border-bottom: 1px solid #ddd; background: <%= player.id == current_player.id ? '#dbeafe' : 'white' %>;">
+            <td style="padding: 15px; font-weight: bold;">
+              <%= index + 1 %>位
+            </td>
+
+            <td>
+              <%= player.name %>
+              <% if player.id == current_player.id %>
+                <span style="color: #2563eb;">（あなた）</span>
+              <% end %>
+            </td>
+
+            <td style="font-weight: bold;">
+              <%= @language == "korean" ? player.korean_rating : player.rating %>
+            </td>
+
+            <td>
+              <%= total.zero? ? "-" : "#{accuracy}%" %>
+            </td>
+
+            <td><%= total %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="text-align: center; margin-top: 35px;">
+    <%= link_to "🇻🇳 ベトナム語クイズ", quiz_path %>
+    |
+    <%= link_to "🇰🇷🇰🇵 コリア語クイズ", korean_quiz_path %>
     |
     <%= link_to "マイページ", mypage_path %>
   </div>

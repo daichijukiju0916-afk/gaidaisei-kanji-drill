@@ -14,6 +14,7 @@ class Player < ApplicationRecord
 
   validates :password, presence: true, on: :create
 attribute :rating, :integer, default: 500
+attribute :korean_rating, :integer, default: 500
   # 回答履歴
   has_many :answers, dependent: :destroy
 
